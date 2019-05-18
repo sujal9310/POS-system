@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "registeration.h"
 
 mainwindow::mainwindow(){
 QDesktopWidget *widget = new QDesktopWidget;
@@ -8,29 +9,36 @@ QRect screenSize = widget->availableGeometry(widget->primaryScreen());
 this->move(screenSize.height()/2,screenSize.width()/8);
 add_menus();
 primarylayout->setMenuBar(menubar);
+webview->setUrl(QUrl(QStringLiteral("http://localhost/")));
+primarylayout->addWidget(webview);
 this->setLayout(primarylayout);
-this->setWindowTitle("Point of Sale");
+this->setWindowTitle("HERMES");
 }
 
 void mainwindow::add_menus(){
 add_acts();
 menubar->addMenu(file);
+menubar->addMenu(user_management);
 menubar->addMenu(help);
 }
 
 void mainwindow::add_acts(){
     about_us.setText("About");
     users.setText("Users");
+    add_user.setText("Add Users");
+    remove_user.setText("Remove Users");
     exit_program->setToolTip("Exit Program");
     exit_program->setText("Quit");
     file->addAction(exit_program);
-    help->addAction(&users);
+    user_management->addAction(&add_user);
+    user_management->addAction(&remove_user);
     help->addAction(&about_us);
-
     action_definations();
 }
 
 void mainwindow::action_definations(){
+    registeration *main_window = new registeration();
+
     connect(exit_program,&QAction::triggered,[=](){
     qDebug() << "Exiting Application.";
     exit(0);
@@ -38,6 +46,10 @@ void mainwindow::action_definations(){
 
     connect(&about_us,&QAction::triggered,[=](){
     launch_about();
+    });
+
+    connect(&add_user,&QAction::triggered,[=](){
+    main_window->show();
     });
 }
 
